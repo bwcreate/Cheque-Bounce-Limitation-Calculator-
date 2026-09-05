@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cheque Bounce Limitation Calculator</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+}
+
+.calculator{
+    max-width:900px;
+    margin:auto;
+    background:#ffffff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 35px rgba(0,0,0,.10);
+}
+
+.header{
+    padding:28px 25px;
+    color:white;
+    background:
+        radial-gradient(circle at 10% 50%,rgba(66,153,225,.28),transparent 25%),
+        linear-gradient(110deg,#071f49 0%,#0b3674 48%,#145ca8 100%);
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:26px;
+}
+
+.header p{
+    margin:0;
+    opacity:.88;
+    font-size:14px;
+}
+
+.form{
+    padding:25px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.field label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:7px;
+    color:#344054;
+}
+
+.field input{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid #d5dce7;
+    border-radius:9px;
+    font-size:15px;
+    outline:none;
+}
+
+.field input:focus{
+    border-color:#1769aa;
+    box-shadow:0 0 0 3px rgba(23,105,170,.10);
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+}
+
+button{
+    border:0;
+    border-radius:9px;
+    padding:13px 22px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.calculate{
+    color:white;
+    background:#0b4f9c;
+    flex:1;
+}
+
+.reset{
+    background:#edf1f6;
+    color:#344054;
+}
+
+.result{
+    display:none;
+    padding:0 25px 25px;
+}
+
+.status{
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:18px;
+    font-weight:700;
+}
+
+.status.green{
+    background:#e8f8ef;
+    color:#087443;
+    border:1px solid #bce8cf;
+}
+
+.status.orange{
+    background:#fff5df;
+    color:#9a5a00;
+    border:1px solid #f1d18c;
+}
+
+.status.red{
+    background:#fdecec;
+    color:#b42318;
+    border:1px solid #f2b8b5;
+}
+
+.status-title{
+    font-size:20px;
+    margin-bottom:5px;
+}
+
+.status-sub{
+    font-size:14px;
+    font-weight:500;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.card{
+    border:1px solid #e1e6ee;
+    border-radius:12px;
+    padding:16px;
+    background:#fafbfd;
+}
+
+.card .label{
+    color:#667085;
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.card .value{
+    font-size:17px;
+    font-weight:700;
+    color:#172033;
+}
+
+.timeline{
+    margin-top:20px;
+    border:1px solid #e1e6ee;
+    border-radius:12px;
+    padding:18px;
+}
+
+.timeline h3{
+    margin:0 0 16px;
+    font-size:18px;
+}
+
+.timeline-item{
+    position:relative;
+    padding:0 0 18px 28px;
+    border-left:2px solid #cbd5e1;
+    margin-left:7px;
+}
+
+.timeline-item:last-child{
+    border-left:0;
+    padding-bottom:0;
+}
+
+.dot{
+    position:absolute;
+    left:-7px;
+    top:0;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#0b4f9c;
+}
+
+.timeline-item strong{
+    display:block;
+    font-size:14px;
+}
+
+.timeline-item span{
+    display:block;
+    margin-top:4px;
+    color:#667085;
+    font-size:13px;
+}
+
+.note{
+    margin-top:20px;
+    background:#f7f9fc;
+    border-left:4px solid #0b4f9c;
+    padding:15px;
+    font-size:13px;
+    line-height:1.6;
+    color:#475467;
+}
+
+.footer{
+    text-align:center;
+    padding:16px;
+    font-size:11px;
+    color:#98a2b3;
+}
+
+@media(max-width:650px){
+    body{
+        padding:8px;
+    }
+
+    .grid,
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:22px;
+    }
+
+    .form,
+    .result{
+        padding-left:16px;
+        padding-right:16px;
+    }
+
+    .buttons{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <div class="header">
+        <h1>Cheque Bounce Limitation Calculator</h1>
+        <p>Section 138 – Negotiable Instruments Act</p>
+    </div>
+
+    <div class="form">
+
+        <div class="grid">
+
+            <div class="field">
+                <label>Cheque Dishonour Date</label>
+                <input type="date" id="bounceDate">
+            </div>
+
+            <div class="field">
+                <label>Date of Bank Information / Intimation</label>
+                <input type="date" id="bankInfoDate">
+            </div>
+
+            <div class="field">
+                <label>Legal Notice Date</label>
+                <input type="date" id="noticeDate">
+            </div>
+
+            <div class="field">
+                <label>Date Notice Received by Drawer</label>
+                <input type="date" id="noticeReceived">
+            </div>
+
+        </div>
+
+        <div class="buttons">
+            <button class="calculate" onclick="calculate()">
+                Calculate Limitation
+            </button>
+
+            <button class="reset" onclick="resetForm()">
+                Reset
+            </button>
+        </div>
+
+    </div>
+
+    <div class="result" id="result">
+
+        <div class="status" id="status">
+            <div class="status-title" id="statusTitle"></div>
+            <div class="status-sub" id="statusSub"></div>
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <div class="label">Last Date for Legal Notice</div>
+                <div class="value" id="noticeLast"></div>
+            </div>
+
+            <div class="card">
+                <div class="label">15 Days Payment Period Ends</div>
+                <div class="value" id="paymentEnd"></div>
+            </div>
+
+            <div class="card">
+                <div class="label">Cause of Action Date</div>
+                <div class="value" id="causeDate"></div>
+            </div>
+
+            <div class="card">
+                <div class="label">Complaint Filing Last Date</div>
+                <div class="value" id="complaintLast"></div>
+            </div>
+
+        </div>
+
+        <div class="timeline">
+
+            <h3>Limitation Timeline</h3>
+
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <strong>Cheque Dishonoured</strong>
+                <span id="tBounce"></span>
+            </div>
+
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <strong>30-Day Notice Period</strong>
+                <span id="tNotice"></span>
+            </div>
+
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <strong>15-Day Payment Period</strong>
+                <span id="tPayment"></span>
+            </div>
+
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <strong>Cause of Action</strong>
+                <span id="tCause"></span>
+            </div>
+
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <strong>Complaint Limitation</strong>
+                <span id="tComplaint"></span>
+            </div>
+
+        </div>
+
+        <div class="note">
+
+            <strong>Important:</strong><br>
+            This calculator is intended as a limitation-assistance
+            tool based on the statutory framework of Section 138 of
+            the Negotiable Instruments Act. Actual limitation may
+            depend upon the facts of the case, dates of presentation,
+            bank intimation, service of notice, applicable rules and
+            judicial orders. Delay in filing may be condoned by the
+            Court where legally permissible and sufficient cause is
+            shown.
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Cheque Bounce Limitation Calculator
+    </div>
+
+</div>
+
+
+<script>
+
+function parseDate(value){
+    if(!value) return null;
+
+    let p=value.split("-");
+    return new Date(
+        Number(p[0]),
+        Number(p[1])-1,
+        Number(p[2])
+    );
+}
+
+function addDays(date,days){
+    let d=new Date(date);
+    d.setDate(d.getDate()+days);
+    return d;
+}
+
+function formatDate(date){
+
+    if(!date) return "-";
+
+    return String(date.getDate()).padStart(2,"0")
+        + "/" +
+        String(date.getMonth()+1).padStart(2,"0")
+        + "/" +
+        date.getFullYear();
+}
+
+function addMonths(date,months){
+
+    let d=new Date(date);
+
+    let day=d.getDate();
+
+    d.setMonth(d.getMonth()+months);
+
+    /*
+      Handle dates falling at the end of a month.
+    */
+    if(d.getDate() < day){
+        d.setDate(0);
+    }
+
+    return d;
+}
+
+function calculate(){
+
+    let bounce=parseDate(
+        document.getElementById("bounceDate").value
+    );
+
+    let bankInfo=parseDate(
+        document.getElementById("bankInfoDate").value
+    );
+
+    let notice=parseDate(
+        document.getElementById("noticeDate").value
+    );
+
+    let received=parseDate(
+        document.getElementById("noticeReceived").value
+    );
+
+    if(!bankInfo || !received){
+
+        alert(
+            "Please enter Bank Information Date and Notice Received Date."
+        );
+
+        return;
+    }
+
+    /*
+      Section 138(b):
+      Notice within 30 days of receipt of information
+      regarding dishonour.
+    */
+
+    let noticeLast=addDays(bankInfo,30);
+
+    /*
+      Section 138(c):
+      Drawer gets 15 days from receipt of notice
+      to make payment.
+
+      Cause of action arises after expiry of 15 days.
+    */
+
+    let paymentEnd=addDays(received,15);
+
+    /*
+      Cause of action is the day immediately following
+      expiry of the 15-day period.
+    */
+
+    let causeDate=addDays(paymentEnd,1);
+
+    /*
+      Section 142(b):
+      Complaint within one month from cause of action.
+    */
+
+    let complaintLast=addMonths(causeDate,1);
+
+    document.getElementById("noticeLast").innerText=
+        formatDate(noticeLast);
+
+    document.getElementById("paymentEnd").innerText=
+        formatDate(paymentEnd);
+
+    document.getElementById("causeDate").innerText=
+        formatDate(causeDate);
+
+    document.getElementById("complaintLast").innerText=
+        formatDate(complaintLast);
+
+    document.getElementById("tBounce").innerText=
+        formatDate(bounce);
+
+    document.getElementById("tNotice").innerText=
+        "Last date: " + formatDate(noticeLast);
+
+    document.getElementById("tPayment").innerText=
+        "Ends on: " + formatDate(paymentEnd);
+
+    document.getElementById("tCause").innerText=
+        formatDate(causeDate);
+
+    document.getElementById("tComplaint").innerText=
+        "Last date: " + formatDate(complaintLast);
+
+    /*
+      Status based on today's date.
+    */
+
+    let today=new Date();
+
+    today.setHours(0,0,0,0);
+
+    complaintLast.setHours(0,0,0,0);
+
+    let diff=Math.ceil(
+        (complaintLast-today)/(1000*60*60*24)
+    );
+
+    let status=document.getElementById("status");
+    let title=document.getElementById("statusTitle");
+    let sub=document.getElementById("statusSub");
+
+    status.className="status";
+
+    if(diff>30){
+
+        status.classList.add("green");
+
+        title.innerText="✓ Within Limitation";
+
+        sub.innerText=
+            diff + " days remaining for filing the complaint.";
+
+    }
+    else if(diff>=0){
+
+        status.classList.add("orange");
+
+        title.innerText="⚠ Limitation Expiring Soon";
+
+        sub.innerText=
+            diff + " days remaining for filing the complaint.";
+
+    }
+    else{
+
+        status.classList.add("red");
+
+        title.innerText="✕ Limitation Period Expired";
+
+        sub.innerText=
+            Math.abs(diff) +
+            " days have passed from the calculated last date.";
+
+    }
+
+    document.getElementById("result").style.display="block";
+
+    document.getElementById("result").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+}
+
+
+function resetForm(){
+
+    document.getElementById("bounceDate").value="";
+    document.getElementById("bankInfoDate").value="";
+    document.getElementById("noticeDate").value="";
+    document.getElementById("noticeReceived").value="";
+
+    document.getElementById("result").style.display="none";
+}
+
+</script>
+
+</body>
+</html>
