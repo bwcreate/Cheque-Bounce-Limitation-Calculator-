@@ -7,34 +7,1346 @@
 <title>Cheque Bounce Limitation Calculator</title>
 
 <style>
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-body{
-    margin:0;
-    padding:20px;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#172033;
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f6fa;
+    color: #172033;
 }
 
-.calculator{
-    max-width:900px;
-    margin:auto;
-    background:#ffffff;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 10px 35px rgba(0,0,0,.10);
+.container {
+    max-width: 950px;
+    margin: auto;
 }
 
-.header{
-    padding:28px 25px;
-    color:white;
+.calculator {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(0,0,0,.10);
+}
+
+/* HEADER */
+
+.header {
+    padding: 30px 25px;
+    color: #fff;
     background:
-        radial-gradient(circle at 10% 50%,rgba(66,153,225,.28),transparent 25%),
-        linear-gradient(110deg,#071f49 0%,#0b3674 48%,#145ca8 100%);
+        radial-gradient(
+            circle at 10% 50%,
+            rgba(66,153,225,.28),
+            transparent 25%
+        ),
+        linear-gradient(
+            110deg,
+            #071f49 0%,
+            #0b3674 48%,
+            #145ca8 100%
+        );
 }
+
+.header h1 {
+    margin: 0 0 7px;
+    font-size: 27px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: .88;
+}
+
+/* FORM */
+
+.form {
+    padding: 28px;
+}
+
+.form-title {
+    margin-bottom: 20px;
+}
+
+.form-title h2 {
+    margin: 0 0 5px;
+    font-size: 20px;
+}
+
+.form-title p {
+    margin: 0;
+    color: #667085;
+    font-size: 13px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #344054;
+}
+
+.field input {
+    width: 100%;
+    height: 47px;
+    padding: 0 13px;
+    border: 1px solid #d5dce7;
+    border-radius: 9px;
+    font-size: 15px;
+    background: #fff;
+    outline: none;
+}
+
+.field input:focus {
+    border-color: #145ca8;
+    box-shadow: 0 0 0 3px rgba(20,92,168,.10);
+}
+
+.help {
+    margin-top: 5px;
+    color: #98a2b3;
+    font-size: 11px;
+}
+
+/* BUTTONS */
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+button {
+    height: 47px;
+    border: 0;
+    border-radius: 9px;
+    padding: 0 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.calculate {
+    flex: 1;
+    color: #fff;
+    background: linear-gradient(110deg,#0b3674,#145ca8);
+}
+
+.reset {
+    background: #edf1f6;
+    color: #344054;
+}
+
+/* ERROR */
+
+.error {
+    display: none;
+    margin-top: 15px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #fff0f0;
+    color: #b42318;
+    font-size: 13px;
+}
+
+/* RESULTS */
+
+.result {
+    display: none;
+    padding: 0 28px 28px;
+}
+
+.status {
+    padding: 18px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid;
+}
+
+.status.green {
+    background: #eaf8ef;
+    color: #087443;
+    border-color: #b8e5c9;
+}
+
+.status.orange {
+    background: #fff6df;
+    color: #9a5a00;
+    border-color: #efd28e;
+}
+
+.status.red {
+    background: #fdecec;
+    color: #b42318;
+    border-color: #efb6b3;
+}
+
+.status-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.status-text {
+    font-size: 13px;
+}
+
+/* DATE CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.card {
+    padding: 17px;
+    border: 1px solid #e1e6ee;
+    border-radius: 12px;
+    background: #fafbfd;
+}
+
+.card-label {
+    color: #667085;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.card-value {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+/* TIMELINE */
+
+.timeline {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #e1e6ee;
+    border-radius: 12px;
+}
+
+.timeline h3 {
+    margin: 0 0 20px;
+    font-size: 18px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-left: 7px;
+    padding: 0 0 20px 28px;
+    border-left: 2px solid #d5dce7;
+}
+
+.timeline-item:last-child {
+    border-left: none;
+    padding-bottom: 0;
+}
+
+.dot {
+    position: absolute;
+    left: -7px;
+    top: 1px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #0b4f9c;
+}
+
+.timeline-item strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.timeline-item span {
+    font-size: 13px;
+    color: #667085;
+}
+
+/* LEGAL NOTE */
+
+.note {
+    margin-top: 20px;
+    padding: 16px;
+    border-left: 4px solid #145ca8;
+    border-radius: 7px;
+    background: #f7f9fc;
+    color: #475467;
+    font-size: 12px;
+    line-height: 1.65;
+}
+
+/* FOOTER */
+
+.footer {
+    padding: 16px;
+    text-align: center;
+    border-top: 1px solid #edf0f4;
+    color: #98a2b3;
+    font-size: 11px;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+    body {
+        padding: 8px;
+    }
+
+    .header {
+        padding: 24px 18px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .form,
+    .result {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+
+    .grid,
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="calculator">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            Cheque Bounce Limitation Calculator
+        </h1>
+
+        <p>
+            Section 138 &amp; Section 142 — Negotiable Instruments Act
+        </p>
+
+    </div>
+
+
+    <!-- INPUT -->
+
+    <div class="form">
+
+        <div class="form-title">
+
+            <h2>Enter Case Dates</h2>
+
+            <p>
+                Enter the dates exactly as appearing in the case record.
+            </p>
+
+        </div>
+
+
+        <div class="grid">
+
+            <!-- DISHONOUR -->
+
+            <div class="field">
+
+                <label>
+                    Cheque Dishonour Date
+                </label>
+
+                <input
+                    type="date"
+                    id="dishonourDate"
+                >
+
+                <div class="help">
+                    Date mentioned in bank return memo
+                </div>
+
+            </div>
+
+
+            <!-- BANK INFORMATION -->
+
+            <div class="field">
+
+                <label>
+                    Date of Receipt of Bank Information
+                    <span style="color:#b42318">*</span>
+                </label>
+
+                <input
+                    type="date"
+                    id="bankInfoDate"
+                >
+
+                <div class="help">
+                    Date on which payee received information of dishonour
+                </div>
+
+            </div>
+
+
+            <!-- NOTICE -->
+
+            <div class="field">
+
+                <label>
+                    Legal Notice Date
+                </label>
+
+                <input
+                    type="date"
+                    id="noticeDate"
+                >
+
+                <div class="help">
+                    Actual date on which notice was issued
+                </div>
+
+            </div>
+
+
+            <!-- RECEIPT -->
+
+            <div class="field">
+
+                <label>
+                    Notice Received / Served Date
+                    <span style="color:#b42318">*</span>
+                </label>
+
+                <input
+                    type="date"
+                    id="noticeReceivedDate"
+                >
+
+                <div class="help">
+                    Date of actual receipt/service of notice
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="error"
+            class="error">
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                type="button"
+                class="calculate"
+                onclick="calculate()">
+
+                Calculate Limitation
+
+            </button>
+
+
+            <button
+                type="button"
+                class="reset"
+                onclick="resetCalculator()">
+
+                Reset
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div
+        id="result"
+        class="result">
+
+
+        <!-- STATUS -->
+
+        <div
+            id="status"
+            class="status">
+
+            <div
+                id="statusTitle"
+                class="status-title">
+            </div>
+
+            <div
+                id="statusText"
+                class="status-text">
+            </div>
+
+        </div>
+
+
+        <!-- IMPORTANT DATES -->
+
+        <div class="cards">
+
+
+            <div class="card">
+
+                <div class="card-label">
+                    Last Date for Statutory Notice
+                </div>
+
+                <div
+                    id="noticeLast"
+                    class="card-value">
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-label">
+                    Last Date of 15-Day Payment Period
+                </div>
+
+                <div
+                    id="paymentLast"
+                    class="card-value">
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-label">
+                    Cause of Action Date
+                </div>
+
+                <div
+                    id="causeDate"
+                    class="card-value">
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-label">
+                    Complaint Filing Last Date
+                </div>
+
+                <div
+                    id="complaintLast"
+                    class="card-value">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TIMELINE -->
+
+        <div class="timeline">
+
+            <h3>
+                Section 138 Limitation Timeline
+            </h3>
+
+
+            <div class="timeline-item">
+
+                <div class="dot"></div>
+
+                <strong>
+                    1. Cheque Dishonoured
+                </strong>
+
+                <span id="timelineDishonour">
+                </span>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="dot"></div>
+
+                <strong>
+                    2. Bank Information Received
+                </strong>
+
+                <span id="timelineBank">
+                </span>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="dot"></div>
+
+                <strong>
+                    3. Statutory Notice — 30 Days
+                </strong>
+
+                <span id="timelineNotice">
+                </span>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="dot"></div>
+
+                <strong>
+                    4. Notice Served / Received
+                </strong>
+
+                <span id="timelineReceived">
+                </span>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="dot"></div>
+
+                <strong>
+                    5. 15-Day Payment Period
+                </strong>
+
+                <span id="timelinePayment">
+                </span>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="dot"></div>
+
+                <strong>
+                    6. Cause of Action
+                </strong>
+
+                <span id="timelineCause">
+                </span>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <div class="dot"></div>
+
+                <strong>
+                    7. Complaint — One Month Limitation
+                </strong>
+
+                <span id="timelineComplaint">
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- LEGAL NOTE -->
+
+        <div class="note">
+
+            <strong>Important Legal Note:</strong>
+
+            <br>
+
+            This calculator is an assistance tool for calculating
+            the statutory timeline relating to cheque dishonour
+            proceedings under Section 138 read with Section 142
+            of the Negotiable Instruments Act.
+
+            <br><br>
+
+            The actual limitation in a particular matter may depend
+            upon the facts of the case, date of receipt of information
+            regarding dishonour, presentation/re-presentation of the
+            cheque, service of statutory notice, mode of service,
+            applicable rules, exclusion of time where legally
+            applicable, court orders and other relevant circumstances.
+
+            <br><br>
+
+            The calculation should therefore be independently verified
+            before relying upon it for filing or limitation purposes.
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+
+        Cheque Bounce Limitation Calculator
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/*
+====================================================
+ DATE UTILITIES
+====================================================
+*/
+
+
+/*
+ Convert HTML date input (YYYY-MM-DD)
+ into a local date.
+
+ We deliberately do NOT use:
+
+ new Date("YYYY-MM-DD")
+
+ because that can introduce timezone-related
+ one-day differences.
+*/
+
+function getDate(id) {
+
+    const value = document.getElementById(id).value;
+
+    if (!value) {
+        return null;
+    }
+
+    const parts = value.split("-");
+
+    return new Date(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
+    );
+}
+
+
+/*
+ Format date as DD/MM/YYYY
+*/
+
+function formatDate(date) {
+
+    if (!date) {
+        return "Not entered";
+    }
+
+    const day =
+        String(date.getDate()).padStart(2, "0");
+
+    const month =
+        String(date.getMonth() + 1).padStart(2, "0");
+
+    const year =
+        date.getFullYear();
+
+    return day + "/" + month + "/" + year;
+}
+
+
+/*
+ Add days.
+*/
+
+function addDays(date, days) {
+
+    const result = new Date(date);
+
+    result.setDate(
+        result.getDate() + days
+    );
+
+    return result;
+}
+
+
+/*
+ Add one calendar month.
+
+ Example:
+
+ 15 August + 1 month
+ = 15 September
+
+ 31 January + 1 month
+ = last valid day of February
+*/
+
+function addOneMonth(date) {
+
+    const result = new Date(date);
+
+    const originalDay =
+        result.getDate();
+
+    result.setDate(1);
+
+    result.setMonth(
+        result.getMonth() + 1
+    );
+
+    const lastDay =
+        new Date(
+            result.getFullYear(),
+            result.getMonth() + 1,
+            0
+        ).getDate();
+
+    result.setDate(
+        Math.min(originalDay, lastDay)
+    );
+
+    return result;
+}
+
+
+/*
+ Set time to midnight.
+
+*/
+
+function midnight(date) {
+
+    const result = new Date(date);
+
+    result.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+    return result;
+}
+
+
+/*
+ Difference between two dates.
+
+*/
+
+function daysBetween(from, to) {
+
+    const a =
+        midnight(from);
+
+    const b =
+        midnight(to);
+
+    return Math.round(
+        (b - a) /
+        (1000 * 60 * 60 * 24)
+    );
+}
+
+
+/*
+ Show error message.
+*/
+
+function showError(message) {
+
+    const box =
+        document.getElementById("error");
+
+    box.innerText =
+        message;
+
+    box.style.display =
+        "block";
+}
+
+
+/*
+ Hide error.
+*/
+
+function hideError() {
+
+    const box =
+        document.getElementById("error");
+
+    box.innerText =
+        "";
+
+    box.style.display =
+        "none";
+}
+
+
+/*
+====================================================
+ MAIN CALCULATION
+====================================================
+*/
+
+function calculate() {
+
+    hideError();
+
+
+    /*
+    Read dates
+    */
+
+    const dishonour =
+        getDate("dishonourDate");
+
+    const bankInfo =
+        getDate("bankInfoDate");
+
+    const notice =
+        getDate("noticeDate");
+
+    const noticeReceived =
+        getDate("noticeReceivedDate");
+
+
+    /*
+    Required fields
+    */
+
+    if (!bankInfo) {
+
+        showError(
+            "Please enter the Date of Receipt of Bank Information."
+        );
+
+        return;
+    }
+
+
+    if (!noticeReceived) {
+
+        showError(
+            "Please enter the Notice Received / Served Date."
+        );
+
+        return;
+    }
+
+
+    /*
+    Chronology validation
+    */
+
+    if (
+        dishonour &&
+        bankInfo < dishonour
+    ) {
+
+        showError(
+            "Bank Information Date cannot be earlier than the Cheque Dishonour Date."
+        );
+
+        return;
+    }
+
+
+    if (
+        notice &&
+        notice < bankInfo
+    ) {
+
+        showError(
+            "Legal Notice Date cannot be earlier than the Bank Information Date."
+        );
+
+        return;
+    }
+
+
+    if (
+        notice &&
+        notice > noticeReceived
+    ) {
+
+        showError(
+            "Notice Received / Served Date cannot be earlier than the Legal Notice Date."
+        );
+
+        return;
+    }
+
+
+    /*
+    ================================================
+    SECTION 138(b)
+
+    Notice has to be issued within 30 days
+    from receipt of information regarding
+    dishonour.
+
+    ================================================
+    */
+
+    const noticeLast =
+        addDays(
+            bankInfo,
+            30
+        );
+
+
+    /*
+    ================================================
+    SECTION 138(c)
+
+    15 days from receipt/service of notice.
+
+    ================================================
+    */
+
+    const paymentLast =
+        addDays(
+            noticeReceived,
+            15
+        );
+
+
+    /*
+    Cause of action arises after expiry
+    of the 15-day period.
+    */
+
+    const causeDate =
+        addDays(
+            paymentLast,
+            1
+        );
+
+
+    /*
+    ================================================
+    SECTION 142(b)
+
+    Complaint is to be made within one month
+    from the date on which cause of action arose.
+    ================================================
+    */
+
+    const complaintLast =
+        addOneMonth(
+            causeDate
+        );
+
+
+    /*
+    ================================================
+    DISPLAY MAIN DATES
+    ================================================
+    */
+
+    document.getElementById(
+        "noticeLast"
+    ).innerText =
+        formatDate(noticeLast);
+
+
+    document.getElementById(
+        "paymentLast"
+    ).innerText =
+        formatDate(paymentLast);
+
+
+    document.getElementById(
+        "causeDate"
+    ).innerText =
+        formatDate(causeDate);
+
+
+    document.getElementById(
+        "complaintLast"
+    ).innerText =
+        formatDate(complaintLast);
+
+
+    /*
+    ================================================
+    DISPLAY TIMELINE
+    ================================================
+    */
+
+    document.getElementById(
+        "timelineDishonour"
+    ).innerText =
+        formatDate(dishonour);
+
+
+    document.getElementById(
+        "timelineBank"
+    ).innerText =
+        formatDate(bankInfo);
+
+
+    document.getElementById(
+        "timelineNotice"
+    ).innerText =
+        "Last date to issue notice: " +
+        formatDate(noticeLast);
+
+
+    document.getElementById(
+        "timelineReceived"
+    ).innerText =
+        formatDate(noticeReceived);
+
+
+    document.getElementById(
+        "timelinePayment"
+    ).innerText =
+        "15-day period ends on: " +
+        formatDate(paymentLast);
+
+
+    document.getElementById(
+        "timelineCause"
+    ).innerText =
+        formatDate(causeDate);
+
+
+    document.getElementById(
+        "timelineComplaint"
+    ).innerText =
+        "Calculated last date: " +
+        formatDate(complaintLast);
+
+
+    /*
+    ================================================
+    CURRENT STATUS
+    ================================================
+    */
+
+    const today =
+        midnight(
+            new Date()
+        );
+
+
+    const lastDate =
+        midnight(
+            complaintLast
+        );
+
+
+    const remaining =
+        daysBetween(
+            today,
+            lastDate
+        );
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    const statusTitle =
+        document.getElementById(
+            "statusTitle"
+        );
+
+
+    const statusText =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    /*
+    Remove previous classes
+    */
+
+    status.className =
+        "status";
+
+
+    /*
+    ================================================
+    WITHIN LIMITATION
+    ================================================
+    */
+
+    if (remaining > 30) {
+
+        status.classList.add(
+            "green"
+        );
+
+        statusTitle.innerText =
+            "✓ Within Limitation";
+
+        statusText.innerText =
+            remaining +
+            " days remaining from today to the calculated last date.";
+
+    }
+
+
+    /*
+    ================================================
+    EXPIRING SOON
+    ================================================
+    */
+
+    else if (remaining >= 0) {
+
+        status.classList.add(
+            "orange"
+        );
+
+        statusTitle.innerText =
+            "⚠ Limitation Expiring Soon";
+
+        statusText.innerText =
+            remaining +
+            " days remaining from today to the calculated last date.";
+
+    }
+
+
+    /*
+    ================================================
+    EXPIRED
+    ================================================
+    */
+
+    else {
+
+        status.classList.add(
+            "red"
+        );
+
+        statusTitle.innerText =
+            "✕ Calculated Limitation Period Expired";
+
+        statusText.innerText =
+            Math.abs(remaining) +
+            " days have passed after the calculated last date.";
+
+    }
+
+
+    /*
+    Show result
+    */
+
+    const result =
+        document.getElementById(
+            "result"
+        );
+
+    result.style.display =
+        "block";
+
+
+    /*
+    Scroll result into view
+    */
+
+    setTimeout(function() {
+
+        result.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }, 100);
+
+}
+
+
+/*
+====================================================
+ RESET
+====================================================
+*/
+
+function resetCalculator() {
+
+    document.getElementById(
+        "dishonourDate"
+    ).value = "";
+
+
+    document.getElementById(
+        "bankInfoDate"
+    ).value = "";
+
+
+    document.getElementById(
+        "noticeDate"
+    ).value = "";
+
+
+    document.getElementById(
+        "noticeReceivedDate"
+    ).value = "";
+
+
+    document.getElementById(
+        "result"
+    ).style.display =
+        "none";
+
+
+    hideError();
+
+}
+
+</script>
+
+</body>
+</html>
 
 .header h1{
     margin:0 0 8px;
